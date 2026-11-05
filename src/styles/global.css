@@ -1,0 +1,59 @@
+/* Design tokens: every color and font on the site comes from here. */
+:root {
+  --bg: #F4F2EE;
+  --fg: #15171F;
+  --muted: #5A5F6C;
+  --line: #DCD7CE;
+  --window: #E9A548;
+
+  --hero-fg: #F7F4EE;
+  --hero-muted: rgba(247, 244, 238, 0.78);
+  --glass: rgba(14, 18, 34, 0.34);
+  --glass-line: rgba(255, 255, 255, 0.16);
+  --sky-top: #1d3a6b;
+  --sky-hor: #f0a46c;
+
+  --font-display: "Bricolage Grotesque", "Hanken Grotesk", system-ui, sans-serif;
+  --font-body: "Hanken Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+}
+
+/* Night colors, used when the page is in night mode */
+:root[data-theme="dark"] {
+  --bg: #0A0E19;
+  --fg: #EEEBE4;
+  --muted: #9EA4B4;
+  --line: #252C42;
+  --window: #F2B45A;
+  --glass: rgba(8, 11, 24, 0.42);
+  --glass-line: rgba(255, 255, 255, 0.12);
+  --sky-top: #02040b;
+  --sky-hor: #2a2547;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: inherit; }
+
+:focus-visible {
+  outline: 2px solid var(--window);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* Centers content and keeps it from getting too wide */
+.wrap {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+}

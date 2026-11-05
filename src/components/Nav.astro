@@ -1,0 +1,55 @@
+---
+// Site navigation. The links are data, so adding a page means adding one line.
+const links = [
+  { label: "Work", href: "#work" },
+  { label: "Research", href: "#research" },
+  { label: "About", href: "#about" },
+  { label: "Resume", href: "/resume.pdf" },
+];
+---
+
+<header class="nav">
+  <a class="brand" href="/">Bhavika Kothapalli</a>
+  <nav aria-label="Main">
+    {links.map((link) => <a href={link.href}>{link.label}</a>)}
+  </nav>
+</header>
+
+<style>
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+    padding-block: 22px;
+    color: var(--hero-fg);
+  }
+
+  .brand {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 19px;
+    letter-spacing: -0.01em;
+    text-decoration: none;
+    padding-block: 10px;
+  }
+
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 22px;
+    font-size: 15px;
+  }
+
+  nav a {
+    color: var(--hero-muted);
+    text-decoration: none;
+    padding-block: 12px;
+    transition: color 0.2s;
+  }
+
+  nav a:hover {
+    color: var(--hero-fg);
+  }
+</style>

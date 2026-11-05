@@ -1,0 +1,157 @@
+---
+// What you're doing right now. Update this list whenever things change.
+const rightNow = [
+  { what: "Researching machine learning", where: "MICoSys Lab · SJSU" },
+  { what: "Co-leading MindWell SSF", where: "Responsible Computing Club" },
+  { what: "Designing a responsible-innovation hackathon", where: "RCC @ SJSU" },
+];
+---
+
+<div class="intro">
+  <p class="eyebrow">CS @ San José State · Class of 2028 · SF Bay Area</p>
+  <h1>Hi, I’m Bhavika.</h1>
+  <p class="lede">
+    I study computer science and build software and machine learning around problems people actually have.
+  </p>
+
+  <div class="buttons">
+    <a class="btn" href="#work">See selected work ↓</a>
+    <a class="link" href="https://github.com/bhavikak99">GitHub ↗</a>
+    <a class="link" href="https://www.linkedin.com/in/bhavika-kothapalli">LinkedIn ↗</a>
+    <a class="link" href="/resume.pdf">Resume</a>
+  </div>
+
+  <aside class="now" aria-label="Right now">
+    <p class="now-label"><span class="light"></span>Right now</p>
+    <ul>
+      {rightNow.map((item) => (
+        <li>
+          <span>{item.what}</span>
+          <span class="where">{item.where}</span>
+        </li>
+      ))}
+    </ul>
+  </aside>
+</div>
+
+<style>
+  .intro {
+    max-width: 600px;
+    padding-top: clamp(32px, 9vh, 110px);
+    padding-bottom: 48px;
+    color: var(--hero-fg);
+  }
+
+  .eyebrow {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--hero-muted);
+  }
+
+  h1 {
+    margin: 18px 0 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(54px, 8.4vw, 112px);
+    line-height: 0.94;
+    letter-spacing: -0.035em;
+  }
+
+  .lede {
+    margin: 24px 0 0;
+    max-width: 31ch;
+    font-size: clamp(18px, 1.9vw, 22px);
+    line-height: 1.45;
+  }
+
+  .buttons {
+    margin-top: 32px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 22px;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    min-height: 48px;
+    padding: 0 22px;
+    border-radius: 999px;
+    background: var(--hero-fg);
+    color: #14161d;
+    font-weight: 600;
+    text-decoration: none;
+    transition: transform 0.2s;
+  }
+
+  .btn:hover {
+    transform: translateY(-2px);
+  }
+
+  .link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.35);
+  }
+
+  .link:hover {
+    border-bottom-color: var(--hero-fg);
+  }
+
+  .now {
+    margin-top: 40px;
+    max-width: 440px;
+    padding: 18px 20px 8px;
+    border-radius: 18px;
+    background: var(--glass);
+    border: 1px solid var(--glass-line);
+    backdrop-filter: blur(16px);
+  }
+
+  .now-label {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--hero-muted);
+  }
+
+  .light {
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    background: var(--window);
+    box-shadow: 0 0 10px var(--window);
+  }
+
+  ul {
+    list-style: none;
+    margin: 10px 0 0;
+    padding: 0;
+  }
+
+  li {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 4px 16px;
+    padding: 12px 0;
+    border-top: 1px solid var(--glass-line);
+  }
+
+  .where {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--hero-muted);
+  }
+</style>

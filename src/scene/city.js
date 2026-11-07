@@ -132,7 +132,7 @@ export function createCity(scene) {
 
       if (Math.random() > 0.28 + 0.65 * area) continue; // fewer buildings far from downtown
       if (Math.abs(x + 34) < 10 && Math.abs(z + 8) < 10) continue; // keep space for the pyramid
-      if (Math.abs(x - 42) < 11 && Math.abs(z + 18) < 11) continue; // keep space for the tower
+      if (x > 70 && z < -120) continue; // open water under the Golden Gate
 
       const height = 3 + Math.random() ** 2 * 10 + 22 * area * Math.random() + 62 * core * (0.25 + 0.75 * Math.random());
       const width = 4.6 + Math.random() * (STEP - 6);

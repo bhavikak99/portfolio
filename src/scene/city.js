@@ -123,7 +123,7 @@ export function createCity(scene) {
   const closeness = (dx, dz, spread) => Math.exp(-(dx * dx + dz * dz) / (spread * spread));
 
   const STEP = 10; // one city block
-  for (let x = -230; x <= 120; x += STEP) {
+  for (let x = -230; x <= 230; x += STEP) {
     for (let z = -280; z <= 22; z += STEP) {
       const dx = x - downtown.x;
       const dz = z - downtown.z;
@@ -133,8 +133,10 @@ export function createCity(scene) {
       if (Math.random() > 0.28 + 0.65 * area) continue; // fewer buildings far from downtown
       if (Math.abs(x + 34) < 10 && Math.abs(z + 8) < 10) continue; // keep space for the pyramid
       if (x > 70 && z < -120) continue; // open water under the Golden Gate
+      if (x > 120 && Math.random() < 0.35) continue; // the waterfront thins out to the right
 
-      const height = 3 + Math.random() ** 2 * 10 + 22 * area * Math.random() + 62 * core * (0.25 + 0.75 * Math.random());
+      let height = 3 + Math.random() ** 2 * 10 + 22 * area * Math.random() + 62 * core * (0.25 + 0.75 * Math.random());
+      if (x > 60) height = Math.min(height, 5 + Math.random() * 9); // low waterfront, so the Golden Gate stays visible
       const width = 4.6 + Math.random() * (STEP - 6);
       const depth = 4.6 + Math.random() * (STEP - 6);
       const bx = x + (Math.random() - 0.5) * (STEP - width) * 0.8;
@@ -180,10 +182,18 @@ export function createCity(scene) {
   );
   const towerWall = makeWallTexture();
   towerWall.repeat.set(4.8, 7.5);
-  const tower = new THREE.Mesh(
-    new THREE.LatheGeometry(outline, 40),
-    new THREE.MeshStandardMaterial({ color: "#a7b0bd", map: towerWall, roughness: 0.25, metalness: 0.6 })
-  );
+  const towerLights = makeLightsTexture(0.6);
+  towerLights.repeat.set(4.8, 7.5);
+  const towerMaterial = new THREE.MeshStandardMaterial({
+    color: "#a7b0bd",
+    map: towerWall,
+    emissiveMap: towerLights,
+    emissive: "#ffffff",
+    emissiveIntensity: 0, // dark by day, lit at night
+    roughness: 0.25,
+    metalness: 0.6,
+  });
+  const tower = new THREE.Mesh(new THREE.LatheGeometry(outline, 40), towerMaterial);
   tower.position.set(42, 0.3, -18);
   scene.add(tower);
 
@@ -195,4 +205,21 @@ export function createCity(scene) {
   ground.rotation.x = -Math.PI / 2; // lay it flat
   ground.position.set(-160, 0.2, -220);
   scene.add(ground);
+
+  // A second piece of land: the waterfront to the right, under the Bay Bridge
+  const waterfront = new THREE.Mesh(new THREE.PlaneGeometry(180, 170), ground.material);
+  waterfront.rotation.x = -Math.PI / 2;
+  waterfront.position.set(180, 0.2, -40);
+  scene.add(waterfront);
+
+  // ---------- Night mode ----------
+  // night = 0 is golden hour, night = 1 is full night.
+  return {
+    setNight(night) {
+      cityLights.value = THREE.MathUtils.lerp(0.12, 1, night); // more and more buildings switch on
+      towerMaterial.emissiveIntensity = 1.8 * THREE.MathUtils.smoothstep(night, 0.3, 0.8);
+      pyramidMaterial.emissive.set("#ffe9c8");
+      pyramidMaterial.emissiveIntensity = 0.28 * THREE.MathUtils.smoothstep(night, 0.2, 0.7); // soft floodlights
+    },
+  };
 }

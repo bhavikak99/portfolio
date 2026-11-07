@@ -1,14 +1,68 @@
 ---
-// The 3D background. It sits behind the whole page.
+// The 3D background, plus the "Live from San Francisco" pill in the corner.
 ---
 
 <canvas id="scene" aria-hidden="true"></canvas>
 
+<div class="sky-status" id="sky-status">
+  <span class="pill" id="live-pill"><span class="dot"></span><span id="live-text">Live from San Francisco</span></span>
+  <button class="pill back" id="back-to-live" type="button" hidden>Go back to the live sky</button>
+</div>
+
 <script>
   import { startScene } from "../scene/main.js";
+  import { getLiveSky } from "../scene/liveSky.js";
 
-  const canvas = document.getElementById("scene");
-  startScene(canvas);
+  const scene = startScene(document.getElementById("scene"));
+  const modeButton = document.getElementById("mode"); // the sun/moon button in the nav
+  const livePill = document.getElementById("live-pill");
+  const liveText = document.getElementById("live-text");
+  const backButton = document.getElementById("back-to-live");
+  const status = document.getElementById("sky-status");
+
+  // null = follow the real SF sky. true / false = someone picked night / golden hour themselves.
+  let picked = null;
+  let firstUpdate = true;
+
+  function update() {
+    const live = getLiveSky();
+    const night = picked === null ? live.night : picked ? 1 : 0;
+    scene.setNight(night, { instant: firstUpdate }); // no slow fade the first time the page opens
+    firstUpdate = false;
+
+    // Page colors follow the sky
+    document.documentElement.dataset.theme = night > 0.5 ? "dark" : "light";
+    modeButton?.setAttribute("aria-label", night > 0.5 ? "Switch to golden hour" : "Switch to night");
+
+    // Live pill when following the real sky; "go back" button when someone switched
+    const isNarrow = window.innerWidth < 600;
+    liveText.textContent = isNarrow ? live.shortText : live.text;
+    livePill.hidden = picked !== null;
+    backButton.hidden = picked === null;
+    backButton.textContent = live.isNight ? "Go back to the live sky" : "Go back to the morning sky";
+  }
+
+  modeButton?.addEventListener("click", () => {
+    const live = getLiveSky();
+    const showingNight = picked === null ? live.isNight : picked;
+    const wantNight = !showingNight;
+    // Switching to the sky SF has right now is the same as going back to live.
+    picked = wantNight === live.isNight ? null : wantNight;
+    update();
+  });
+
+  backButton.addEventListener("click", () => {
+    picked = null;
+    update();
+  });
+
+  // Hide the pill once you scroll down past the city
+  window.addEventListener("scroll", () => {
+    status.classList.toggle("away", window.scrollY > window.innerHeight * 0.45);
+  }, { passive: true });
+
+  update();
+  setInterval(update, 60000); // check the real sky again every minute
 </script>
 
 <style>
@@ -19,7 +73,59 @@
     height: 100%;
     z-index: 0;
     display: block;
-    /* The sky color behind the 3D. Later the 3D draws its own sky. */
+    /* Shown only if 3D can't load */
     background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-top) 35%, var(--sky-hor) 100%);
+  }
+
+  .sky-status {
+    position: fixed;
+    right: max(16px, env(safe-area-inset-right));
+    bottom: calc(16px + env(safe-area-inset-bottom));
+    z-index: 3;
+    display: flex;
+    gap: 8px;
+    transition: opacity 0.35s, transform 0.35s;
+  }
+
+  .sky-status.away {
+    opacity: 0;
+    transform: translateY(8px);
+    pointer-events: none;
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 36px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font: inherit;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    color: var(--hero-fg);
+    background: rgba(10, 13, 26, 0.58);
+    border: 1px solid var(--glass-line);
+    backdrop-filter: blur(14px);
+  }
+
+  .pill[hidden] {
+    display: none;
+  }
+
+  .back {
+    cursor: pointer;
+  }
+
+  .back:hover {
+    background: rgba(255, 255, 255, 0.14);
+  }
+
+  .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #5ee39a;
+    box-shadow: 0 0 0 3px rgba(94, 227, 154, 0.22);
   }
 </style>

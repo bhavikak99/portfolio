@@ -69,10 +69,13 @@ export function createWater(scene, { reflections }) {
   ripples.position.y = 0.08; // just above the mirror
   scene.add(ripples);
 
-  // Called every frame so the waves keep moving.
+  // Called every frame so the waves keep moving. The water also darkens at night.
+  const dayWater = new THREE.Color("#2e3352");
+  const nightWater = new THREE.Color("#060a17");
   return {
-    update(seconds) {
+    update(seconds, night = 0) {
       uniforms.time.value = seconds;
+      uniforms.waterColor.value.copy(dayWater).lerp(nightWater, night);
     },
   };
 }

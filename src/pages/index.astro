@@ -2,22 +2,28 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Nav from "../components/Nav.astro";
 import Hero from "../components/Hero.astro";
+import SkyScene from "../components/SkyScene.astro";
 ---
 
 <BaseLayout>
+  <SkyScene />
   <section class="hero">
     <div class="wrap">
       <Nav />
-	  	<Hero />
+      <Hero />
     </div>
   </section>
 </BaseLayout>
 
 <style>
-  /* Temporary sky gradient. The 3D scene replaces it later. */
   .hero {
     min-height: 100svh;
     padding-inline: max(16px, env(safe-area-inset-left));
-    background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-top) 35%, var(--sky-hor) 100%);
+  }
+
+  /* Keeps your text in front of the 3D scene */
+  .wrap {
+    position: relative;
+    z-index: 1;
   }
 </style>

@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { createSky, SUN_DIRECTION } from "./sky.js";
+import { createCity } from "./city.js";
 
 // Starts the 3D scene inside the <canvas> you give it.
 export function startScene(canvas) {
@@ -11,32 +12,20 @@ export function startScene(canvas) {
   // The scene: the empty 3D world we put things into.
   const scene = new THREE.Scene();
 
-  // The camera. It can now see up to 1000 steps away, so the sky ball (500 away) fits.
-  const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 1000);
-  camera.position.set(0, 0, 8);
-  camera.lookAt(0, 1.5, 0); // tilt up a little, so the sky fills more of the screen
+  // The camera: now far out on the water, looking back at the city.
+  const camera = new THREE.PerspectiveCamera(34, window.innerWidth / window.innerHeight, 0.5, 5000);
+  camera.position.set(-70, 8, 300);
+  camera.lookAt(-50, 45, -30);
 
-  // The sky
+  // The sky and the city
   const sky = createSky();
   scene.add(sky);
+  createCity(scene);
 
-  // The box (we'll replace it with the city soon)
-  const box = new THREE.Mesh(
-    new THREE.BoxGeometry(1.6, 1.6, 1.6),
-    new THREE.MeshStandardMaterial({
-      color: "#d9d4cc",
-      emissive: "#e9a548",
-      emissiveIntensity: 0.25,
-      roughness: 0.4,
-    })
-  );
-  box.position.set(2.5, 1.2, 0);
-  scene.add(box);
-
-  // Lights. The sun light now comes from the same place as the glow in the sky.
-  scene.add(new THREE.HemisphereLight("#ffd2ad", "#2a2330", 1.2));
-  const sun = new THREE.DirectionalLight("#ffb27a", 2.5);
-  sun.position.copy(SUN_DIRECTION).multiplyScalar(100);
+  // Lights. The sun sits behind the city, so buildings show up as warm silhouettes.
+  scene.add(new THREE.HemisphereLight("#ffd2ad", "#2a2330", 0.9));
+  const sun = new THREE.DirectionalLight("#ffb27a", 2.4);
+  sun.position.copy(SUN_DIRECTION).multiplyScalar(500);
   scene.add(sun);
 
   // Keep things the right size when the window changes.
@@ -47,9 +36,7 @@ export function startScene(canvas) {
   });
 
   // The animation loop
-  renderer.setAnimationLoop((time) => {
-    box.rotation.x = time * 0.0004;
-    box.rotation.y = time * 0.0006;
+  renderer.setAnimationLoop(() => {
     sky.position.copy(camera.position); // the sky ball always stays centered on the camera
     renderer.render(scene, camera);
   });

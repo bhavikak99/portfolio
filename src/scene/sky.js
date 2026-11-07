@@ -60,5 +60,5 @@ export function createSky() {
     `,
   });
 
-  return new THREE.Mesh(new THREE.SphereGeometry(500, 48, 24), material);
+  return new THREE.Mesh(new THREE.SphereGeometry(2000, 48, 24), material);
 }
